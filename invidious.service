@@ -7,11 +7,11 @@ After=network.target
 RestartSec=2s
 Type=simple
 
-User=invidious
-Group=invidious
+User=debian
+Group=debian
 
-WorkingDirectory=/home/invidious/invidious
-ExecStart=/home/invidious/invidious/invidious -o invidious.log
+WorkingDirectory=/home/debian/invidious
+ExecStart=/home/debian/invidious/invidious -o invidious.log
 
 Restart=always
 
