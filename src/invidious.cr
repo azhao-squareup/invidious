@@ -1614,6 +1614,21 @@ get "/c/:user" do |env|
   env.redirect "/channel/#{ucid}"
 end
 
+get "/c/:user/:tab" do |env|
+  locale = LOCALES[env.get("preferences").as(Preferences).locale]?
+
+  user = env.params.url["user"]
+  tab = env.params.url["tab"]
+
+  response = YT_POOL.client &.get("/c/#{user}")
+  html = XML.parse_html(response.body)
+
+  ucid = html.xpath_node(%q(//link[@rel="canonical"])).try &.["href"].split("/")[-1]
+  next env.redirect "/" if !ucid
+
+  env.redirect "/channel/#{ucid}/#{tab}"
+end
+
 # Legacy endpoint for /user/:username
 get "/profile" do |env|
   user = env.params.query["user"]?
