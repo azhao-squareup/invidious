@@ -21,6 +21,7 @@ var options = {
         ]
     },
     html5: {
+        preloadTextTracks: false,
         hls: {
             overrideNative: true
         }
