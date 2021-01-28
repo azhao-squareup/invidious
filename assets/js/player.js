@@ -19,11 +19,6 @@ var options = {
             'playbackRateMenuButton',
             'fullscreenToggle'
         ]
-    },
-    html5: {
-        hls: {
-            overrideNative: true
-        }
     }
 }
 
