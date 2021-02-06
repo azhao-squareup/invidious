@@ -81,6 +81,9 @@ Kemal.config.extra_options do |parser|
   parser.on("-o OUTPUT", "--output=OUTPUT", "Redirect output (default: #{CONFIG.output})") do |output|
     CONFIG.output = output
   end
+  parser.on("-m METRIC_LOG", "--metric_log=METRIC_LOG", "Log metrics to file") do |metric_log|
+    CONFIG.metric_log = metric_log
+  end
   parser.on("-l LEVEL", "--log-level=LEVEL", "Log level, one of #{LogLevel.values} (default: #{CONFIG.log_level})") do |log_level|
     CONFIG.log_level = LogLevel.parse(log_level)
   end
@@ -96,7 +99,7 @@ if CONFIG.output.upcase != "STDOUT"
   FileUtils.mkdir_p(File.dirname(CONFIG.output))
 end
 OUTPUT = CONFIG.output.upcase == "STDOUT" ? STDOUT : File.open(CONFIG.output, mode: "a")
-LOGGER = Invidious::LogHandler.new(OUTPUT, CONFIG.log_level)
+LOGGER = Invidious::LogHandler.new(OUTPUT, CONFIG.log_level, CONFIG.metric_log ? File.open(CONFIG.metric_log.not_nil!, mode: "a") : nil)
 
 # Check table integrity
 if CONFIG.check_tables
@@ -145,6 +148,8 @@ end
 
 connection_channel = Channel({Bool, Channel(PQ::Notification)}).new(32)
 Invidious::Jobs.register Invidious::Jobs::NotificationJob.new(connection_channel, CONFIG.database_url)
+
+Invidious::Jobs.register Invidious::Jobs::DumpGcStatsJob.new
 
 Invidious::Jobs.start_all
 

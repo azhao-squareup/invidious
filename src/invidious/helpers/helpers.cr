@@ -66,6 +66,7 @@ class Config
 
   property channel_threads : Int32 = 1           # Number of threads to use for crawling videos from channels (for updating subscriptions)
   property output : String = "STDOUT"            # Log file path or STDOUT
+  property metric_log : String?                    # Metric log file path
   property log_level : LogLevel = LogLevel::Info # Default log level, valid YAML values are ints and strings, see src/invidious/helpers/logger.cr
   property db : DBConfig? = nil                  # Database configuration with separate parameters (username, hostname, etc)
 

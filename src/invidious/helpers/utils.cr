@@ -34,7 +34,12 @@ struct YoutubeConnectionPool
     else
       conn = pool.checkout
       begin
-        response = yield conn
+        elapsed_time = Time.measure { response = yield conn }
+        puts "conn checked out for #{elapsed_time}"
+        tags = [] of {String, String}
+        fields = [{"pool_checkout_time", elapsed_time.total_milliseconds}]
+        LOGGER.record_metric(tags, fields)
+
       rescue ex
         conn.close
         conn = QUIC::Client.new(url)
