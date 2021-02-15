@@ -820,9 +820,16 @@ def extract_polymer_config(body)
   player_response = body.match(/(window\["ytInitialPlayerResponse"\]|var\sytInitialPlayerResponse)\s*=\s*(?<info>{.*?});/m)
     .try { |r| JSON.parse(r["info"]).as_h }
 
-  if body.includes?("To continue with your YouTube experience, please fill out the form below.") ||
-     body.includes?("https://www.google.com/sorry/index")
-    params["reason"] = JSON::Any.new("Could not extract video info. Instance is likely blocked.")
+  if body.includes?("To continue with your YouTube experience, please fill out the form below.")
+    params["reason"] = JSON::Any.new("Could not extract video info. Instance is likely blocked. (form)")
+    tags = [{"blocked_page", "videos"}]
+    fields = [{"form_blocked", 1.0}]
+    LOGGER.record_metric(tags, fields)
+  elsif body.includes?("https://www.google.com/sorry/index")
+    params["reason"] = JSON::Any.new("Could not extract video info. Instance is likely blocked. (sorry)")
+    tags = [{"blocked_page", "videos"}]
+    fields = [{"sorry_blocked", 1.0}]
+    LOGGER.record_metric(tags, fields)
   elsif !player_response
     params["reason"] = JSON::Any.new("Video unavailable.")
   elsif player_response["playabilityStatus"]?.try &.["status"]?.try &.as_s != "OK"

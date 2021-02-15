@@ -358,6 +358,9 @@ def fetch_playlist(plid, locale)
   response = YT_POOL.client &.get("/playlist?list=#{plid}&hl=en")
   if response.status_code != 200
     if response.headers["location"]?.try &.includes? "/sorry/index"
+      tags = [{"blocked_page", "playlists"}]
+      fields = [{"sorry_blocked", 1.0}]
+      LOGGER.record_metric(tags, fields)
       raise InfoException.new("Could not extract playlist info. Instance is likely blocked.")
     else
       raise InfoException.new("Not a playlist.")

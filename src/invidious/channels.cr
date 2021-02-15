@@ -239,8 +239,15 @@ def fetch_channel(ucid, db, pull_all_videos = true, locale = nil)
     LOGGER.trace("fetch_channel: #{ucid} : Extracting videos from channel videos page initial_data")
     videos = extract_videos(initial_data.as_h, author, ucid)
   rescue ex
-    if response.body.includes?("To continue with your YouTube experience, please fill out the form below.") ||
-       response.body.includes?("https://www.google.com/sorry/index")
+    if response.body.includes?("To continue with your YouTube experience, please fill out the form below.")
+      tags = [{"blocked_page", "channels"}]
+      fields = [{"form_blocked", 1.0}]
+      LOGGER.record_metric(tags, fields)
+      raise InfoException.new("Could not extract channel info. Instance is likely blocked.")
+    elsif response.body.includes?("https://www.google.com/sorry/index")
+      tags = [{"blocked_page", "channels"}]
+      fields = [{"sorry_blocked", 1.0}]
+      LOGGER.record_metric(tags, fields)
       raise InfoException.new("Could not extract channel info. Instance is likely blocked.")
     end
     raise ex

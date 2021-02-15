@@ -200,6 +200,8 @@ end
 connection_channel = Channel({Bool, Channel(PQ::Notification)}).new(32)
 Invidious::Jobs.register Invidious::Jobs::NotificationJob.new(connection_channel, PG_URL)
 
+Invidious::Jobs.register Invidious::Jobs::DumpGcStatsJob.new
+
 Invidious::Jobs.start_all
 
 def popular_videos

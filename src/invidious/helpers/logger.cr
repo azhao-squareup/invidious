@@ -41,7 +41,7 @@ class Invidious::LogHandler < Kemal::BaseLogHandler
 
     info("#{context.response.status_code} #{context.request.method} #{context.request.resource} #{elapsed_text}")
 
-    main_resource = context.request.resource.gsub(/\?.*/, "").gsub(/(\/api\/v1\/[a-z]+).*/, "\\1")
+    main_resource = context.request.resource.gsub(/\?.*/, "").gsub(/(\/api\/v1\/[a-z]+).*/, "\\1").gsub(/(\/api\/manifest\/[a-z]+).*/, "\\1")
     tags = [{"status_code", "#{context.response.status_code}"}, {"method", "#{context.request.method}"}, {"resource", main_resource}]
     fields = [{"latency", elapsed_time.total_milliseconds}]
     record_metric(tags, fields)
