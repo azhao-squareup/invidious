@@ -89,7 +89,7 @@ class Config
   property check_tables : Bool = false                    # Check table integrity, automatically try to add any missing columns, create tables, etc.
   property cache_annotations : Bool = false               # Cache annotations requested from IA, will not cache empty annotations or annotations that only contain cards
   property banner : String? = nil                         # Optional banner to be displayed along top of page for announcements, etc.
-  property hsts : Bool? = true                            # Enables 'Strict-Transport-Security'. Ensure that `domain` and all subdomains are served securely
+  property hsts : Bool? = false                           # Enables 'Strict-Transport-Security'. Ensure that `domain` and all subdomains are served securely
   property disable_proxy : Bool? | Array(String)? = false # Disable proxying server-wide: options: 'dash', 'livestreams', 'downloads', 'local'
 
   @[YAML::Field(converter: Preferences::FamilyConverter)]
@@ -97,7 +97,7 @@ class Config
   property port : Int32 = 3000                                     # Port to listen for connections (overrided by command line argument)
   property host_binding : String = "0.0.0.0"                       # Host to bind (overrided by command line argument)
   property pool_size : Int32 = 100                                 # Pool size for HTTP requests to youtube.com and ytimg.com (each domain has a separate pool of `pool_size`)
-  property use_quic : Bool = true                                  # Use quic transport for youtube api
+  property use_quic : Bool = false                                 # Use quic transport for youtube api
 
   @[YAML::Field(converter: Preferences::StringToCookies)]
   property cookies : HTTP::Cookies = HTTP::Cookies.new               # Saved cookies in "name1=value1; name2=value2..." format
