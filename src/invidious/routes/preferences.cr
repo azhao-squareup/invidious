@@ -188,10 +188,10 @@ class Invidious::Routes::PreferencesRoute < Invidious::Routes::BaseRoute
       end
 
       if CONFIG.domain
-        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", domain: "#{CONFIG.domain}", value: preferences, expires: Time.utc + 2.years,
+        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", domain: "#{CONFIG.domain}", value: URI.encode_www_form(preferences), expires: Time.utc + 2.years,
           secure: secure, http_only: true)
       else
-        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", value: preferences, expires: Time.utc + 2.years,
+        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", value: URI.encode_www_form(preferences), expires: Time.utc + 2.years,
           secure: secure, http_only: true)
       end
     end
@@ -240,10 +240,10 @@ class Invidious::Routes::PreferencesRoute < Invidious::Routes::BaseRoute
       end
 
       if CONFIG.domain
-        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", domain: "#{CONFIG.domain}", value: preferences, expires: Time.utc + 2.years,
+        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", domain: "#{CONFIG.domain}", value: URI.encode_www_form(preferences), expires: Time.utc + 2.years,
           secure: secure, http_only: true)
       else
-        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", value: preferences, expires: Time.utc + 2.years,
+        env.response.cookies["PREFS"] = HTTP::Cookie.new(name: "PREFS", value: URI.encode_www_form(preferences), expires: Time.utc + 2.years,
           secure: secure, http_only: true)
       end
     end
